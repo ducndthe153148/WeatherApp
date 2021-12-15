@@ -20,6 +20,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     var models = [HourlyWeather]()
     var hourlyModels = [HourlyWeather]()
+    var weatherRequest = WeatherRequest()
+    
+    let baseURL = "https://api.openweathermap.org/data/2.5/onecall?lat=35.7020691&lon=139.7753269&appid=78ed6b8b11e08ae58625e4a726e6d625"
+    let apiKey = "&appid=78ed6b8b11e08ae58625e4a726e6d625"
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -61,64 +65,34 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     func requestWeatherForLocation(){
+        print("Start request weather")
+        
         guard let currentLocation = currentLocation else {
             return
         }
+        
         let long = currentLocation.coordinate.longitude
         let lat = currentLocation.coordinate.latitude
-        //print("Long: \(long) and lat: \(lat)")
-
-        let url = "https://api.openweathermap.org/data/2.5/onecall?lat=\(lat)&lon=\(long)&exclude=daily&appid=78ed6b8b11e08ae58625e4a726e6d625"
-        print("\(url)")
-        let url1 = URL(string: url)!
         
-        
-        URLSession.shared.dataTask(with: url1, completionHandler: {
-            data,response,error in
-            // Validation
-            guard let data = data, error == nil else {
-                print("something went wrong")
-                return
-            }
+        let stringURL = "https://api.openweathermap.org/data/2.5/onecall?lat=\(lat)&lon=\(long)&appid=78ed6b8b11e08ae58625e4a726e6d625"
 
-            // Convert data to models/some object
+        weatherRequest.testGeneric(stringURL) { [self] (weatherResponse: WeatherReponse) in
+            let entries = weatherResponse.hourly
+            models.append(contentsOf: entries!)
+            print("Models in request: \(models.count)")
             
-            var json: WeatherReponse?
-            do {
-                
-                json = try JSONDecoder().decode(WeatherReponse.self, from: data)
-            }
-            catch {
-                print("error: \(error)")
-            }
-
-            guard let result = json else {
-                return
-            }
-            //print(result)
-            // Test to see the descriptiong of weather each hour (48 hour test)
-//            let entries = result.hourly?[12].weather?[0].description
-//            print(entries!) // force unwrapped
+            self.hourlyModels = weatherResponse.hourly!
             
-            // need 1 array to add hourly. Data will focus on hourly. Update table view
-            
-            let entries = result.hourly
-            self.models.append(contentsOf: entries!)
-            print(self.models.count)
-            print("\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\")
-            self.hourlyModels = result.hourly!
-            
-            let current = result.current
+            let current = weatherResponse.current
             self.current = current
             // Update user interface
             DispatchQueue.main.async {
                 self.table.reloadData()
                 self.table.tableHeaderView = self.createTableHeader()
             }
-//            print("Test: \(self.models?[0].weather))")
-        }).resume()
-        
+        }
     }
+    
     func numberOfSections(in tableView: UITableView) -> Int {
         return 2
     }
@@ -157,7 +131,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let locationLabel = UILabel(frame: CGRect(x: 10, y: 10, width: view.frame.size.width-20, height: headerVIew.frame.size.height/5))
         let summaryLabel = UILabel(frame: CGRect(x: 10, y: 20+locationLabel.frame.size.height, width: view.frame.size.width-20, height: headerVIew.frame.size.height/5))
         let tempLabel = UILabel(frame: CGRect(x: 10, y: 20+locationLabel.frame.size.height+summaryLabel.frame.size.height, width: view.frame.size.width-20, height: headerVIew.frame.size.height/2))
-
         headerVIew.addSubview(locationLabel)
         headerVIew.addSubview(tempLabel)
         headerVIew.addSubview(summaryLabel)
@@ -210,8 +183,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         controller.text = loctionText
         controller.models = models[indexPath.row]
 //        print("Index selected cell: \(String(describing: models[indexPath.row].temp))")
-        self.present(controller, animated: true, completion: nil)
+        //self.present(controller, animated: true, completion: nil)
+        self.navigationController?.pushViewController(controller, animated: true)
     }
 
 }
+
 

@@ -7,14 +7,58 @@
 
 import Foundation
 import CoreLocation
+import Alamofire
 
 var locationManager = CLLocationManager()
 var currentLocation: CLLocation?
 var current : CurrentWeather?
 
-var models : DailyWeather?
+var models = [HourlyWeather]()
+
+// ứng dụng generic, tách url và WeatherResponse ra khỏi hàm, khi cần gọi chỉ cần truyền vào là có thể chạy được
 
 struct WeatherRequest {
+    private var baseURL = ""
+    // Goi dau tien
+    
+    enum CustomError: Error{
+        case invalidURL
+        case invalidData
+    }
+    
+    
+    func testFirst(_ urlAPI: String) -> [HourlyWeather]{
+        AF.request(self.baseURL + urlAPI, method: .get, parameters: nil, encoding: URLEncoding.default, headers: nil, interceptor: nil).response { (responseData) in
+            print("We got the response")
+            guard let data = responseData.data else {return}
+            do{
+                // Change weather response
+                let weather = try JSONDecoder().decode(WeatherReponse.self, from: data)
+                let entries = weather.hourly
+                models.append(contentsOf: entries!)
+                print("Weather: \(models.count)")
+            } catch {
+                print("Error = \(error)")
+            }
+        }
+        return models
+    }
+    
+    // MARK: - fetch generic data
+    func testGeneric <T: Decodable> (_ urlAPI: String, completion: @escaping (T) -> ()){
+        AF.request(self.baseURL + urlAPI, method: .get, parameters: nil, encoding: URLEncoding.default, headers: nil, interceptor: nil).response{ (responseData) in
+            print("We got the generic response")
+            guard let data = responseData.data else {return}
+            do {
+                let obj = try JSONDecoder().decode(T.self, from: data)
+                completion(obj)
+            } catch {
+                print("Failed to decode json \(error)")
+            }
+            print("Run here")
+        }
+    }
+    
     func requestWeatherForLocation(){
         guard let currentLocation = currentLocation else {
             return
@@ -58,4 +102,6 @@ struct WeatherRequest {
             // Update user interface
         }).resume()
     }
+    
+
 }

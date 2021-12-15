@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="mGn-on-zW2">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
@@ -26,10 +26,13 @@
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="obL-A3-tQS" secondAttribute="trailing" id="2QG-cd-fE2"/>
                             <constraint firstAttribute="bottom" secondItem="obL-A3-tQS" secondAttribute="bottom" id="VNL-Dd-6Xa"/>
+                            <constraint firstAttribute="trailing" secondItem="obL-A3-tQS" secondAttribute="trailing" id="dWG-gb-JE8"/>
                             <constraint firstItem="obL-A3-tQS" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="gJE-FV-l0Q"/>
+                            <constraint firstItem="obL-A3-tQS" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="jKI-sE-cfm"/>
                             <constraint firstItem="obL-A3-tQS" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="yfj-eZ-QmV"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="hnw-1I-scG"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="table" destination="obL-A3-tQS" id="698-ML-wKv"/>
@@ -37,7 +40,25 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="30" y="84"/>
+            <point key="canvasLocation" x="939.13043478260875" y="83.705357142857139"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="YcL-LL-ZCd">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="mGn-on-zW2" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="q6E-Ua-ST6">
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="lrl-rL-rLX"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="xs1-PZ-NTd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="28.985507246376812" y="83.705357142857139"/>
         </scene>
     </scenes>
     <resources>
